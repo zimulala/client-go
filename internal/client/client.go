@@ -40,6 +40,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"math/rand"
 	"runtime/trace"
 	"strconv"
 	"strings"
@@ -1030,7 +1031,8 @@ func (m *rpcMetrics) get(cmd tikvrpc.CmdType, stale bool, internal bool) prometh
 			return m.latBatchGet
 		}
 	}
-	key := uint64(cmd)
+	randomVal := rand.Intn(50)
+	key := uint64(cmd) + uint64(randomVal)
 	if stale {
 		key |= 1 << 16
 	}
@@ -1040,7 +1042,7 @@ func (m *rpcMetrics) get(cmd tikvrpc.CmdType, stale bool, internal bool) prometh
 	lat, ok := m.latOther.Load(key)
 	if !ok {
 		lat = m.root.With(prometheus.Labels{
-			metrics.LblType:      cmd.String(),
+			metrics.LblType:      cmd.String() + strconv.Itoa(randomVal),
 			metrics.LblStaleRead: strconv.FormatBool(stale),
 			metrics.LblScope:     strconv.FormatBool(internal),
 		})

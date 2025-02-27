@@ -172,7 +172,7 @@ func initMetrics(namespace, subsystem string, constLabels prometheus.Labels) {
 			Subsystem:   subsystem,
 			Name:        "request_seconds",
 			Help:        "Bucketed histogram of sending request duration.",
-			Buckets:     prometheus.ExponentialBuckets(0.0005, 2, 29), // 0.5ms ~ 1.5days
+			Buckets:     prometheus.ExponentialBuckets(0.001, 2, 27), // 0.5ms ~ 1.5days
 			ConstLabels: constLabels,
 		}, []string{LblType, LblStore, LblStaleRead, LblScope})
 
